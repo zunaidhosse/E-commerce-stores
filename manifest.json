@@ -1,7 +1,8 @@
 {
   "name": "My PWA App",
   "short_name": "PWAApp",
-  "start_url": "/E-commerce-stores/",  // এই লাইনটি আপনার GitHub Pages রিপোজিটরি নামের সাথে আপডেট করা হয়েছে
+  "start_url": "/E-commerce-stores/",  // নিশ্চিত করুন এটি আপনার GitHub Pages রিপোজিটরি নামের সাথে মিলে
+  "scope": "/E-commerce-stores/",      // নতুন: PWA-এর নেভিগেশন এরিয়া নির্ধারণ করবে
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#007bff",
