@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Store</title>
+    
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- All CSS is embedded here -->
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --secondary-color: #111827;
+            --accent-color: #f59e0b;
+            --text-color: #374151;
+            --bg-color: #f9fafb;
+            --bg-secondary: #ffffff;
+            --border-color: #e5e7eb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --font-main: 'Poppins', sans-serif;
+        }
+
+        /* Basic Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        /* --- UTILITY CLASSES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--secondary-color);
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        .header {
+            background-color: var(--bg-secondary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a, .nav-icons a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-icons a {
+            font-size: 1.2rem;
+            position: relative;
+        }
+
+        .nav-icon-badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background-color: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .mobile-nav-toggle { display: none; }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary-color);
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* --- PAGE SECTIONS --- */
+        main > section {
+            display: none;
+        }
+
+        main > section.active {
+            display: block;
+        }
+        
+        /* --- HOME PAGE & PRODUCTS --- */
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-bar, .sort-options {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .search-bar { flex-grow: 1; max-width: 400px; }
+        .sort-options { min-width: 200px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .product-info {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .product-actions {
+            margin-top: auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .product-actions .btn {
+            flex-grow: 1;
+        }
+        
+        .product-actions .btn-wishlist {
+            flex-grow: 0;
+            padding: 0.75rem;
+            color: var(--text-color);
+            background: var(--bg-color);
+            border-color: var(--border-color);
+        }
+        .product-actions .btn-wishlist:hover {
+             background: var(--border-color);
+        }
+        .product-actions .btn-wishlist.active {
+            color: var(--error-color);
+        }
+        
+        /* --- CART & WISHLIST PAGE --- */
+        .cart-item, .wishlist-item {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .cart-item-img, .wishlist-item-img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .cart-item-info, .wishlist-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-remove, .wishlist-item-remove {
+            color: var(--error-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .cart-summary {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+            text-align: right;
+        }
+        
+        .cart-summary h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* --- MODALS --- */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* --- AUTH MODAL --- */
+        .auth-form-container {
+            position: relative;
+        }
+
+        .auth-form {
+            width: 100%;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .auth-form.hidden {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left:0;
+            transform: translateX(100%);
+            pointer-events: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-switch-link {
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        /* --- PRODUCT DETAIL MODAL --- */
+        #product-detail-modal .modal-content { max-width: 800px; }
+        .product-detail-layout { display: flex; gap: 2rem; }
+        .product-detail-image { width: 40%; }
+        .product-detail-image img { width: 100%; border-radius: 8px; }
+        .product-detail-info { width: 60%; }
+
+        /* --- TOAST NOTIFICATIONS --- */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 1rem 1.5rem;
+            border-radius: 5px;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast.success { background-color: var(--success-color); }
+        .toast.error { background-color: var(--error-color); }
+        .toast.info { background-color: var(--primary-color); }
+        
+        /* --- TABLES (for Orders) --- */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        }
+        .styled-table thead tr {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            text-align: left;
+        }
+        .styled-table th, .styled-table td {
+            padding: 12px 15px;
+        }
+        .styled-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .styled-table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        .styled-table tbody tr:last-of-type {
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-pending { background-color: #f59e0b; }
+        .status-confirmed { background-color: #3b82f6; }
+        .status-shipped { background-color: #10b981; }
+        .status-delivered { background-color: #8b5cf6; }
+        .status-cancelled { background-color: #ef4444; }
+
+        /* --- RESPONSIVE STYLES --- */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Simplification for this example. A real-world scenario would use a hamburger menu. */
+            }
+            .section-title { font-size: 2rem; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .product-detail-layout { flex-direction: column; }
+            .product-detail-image, .product-detail-info { width: 100%; }
+            .cart-item { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <a href="#home" class="logo">Shopify</a>
+            <nav class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#contact">Contact</a>
+                <a href="#orders" class="logged-in-link hidden">My Orders</a>
+                <a href="#profile" class="logged-in-link hidden">Profile</a>
+            </nav>
+            <div class="nav-icons">
+                <a href="#wishlist">
+                    <i class="fas fa-heart"></i>
+                    <span id="wishlist-count-badge" class="nav-icon-badge hidden">0</span>
+                </a>
+                <a href="#cart">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count-badge" class="nav-icon-badge hidden">0</span>
+                </a>
+                <a href="#" id="auth-link" class="guest-link">Login</a>
+                <a href="#" id="logout-link" class="logged-in-link hidden">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content: Pages will be toggled here -->
+    <main>
+        <!-- Home Page -->
+        <section id="home-page" data-page="home" class="section">
+            <div class="container">
+                <h1 class="section-title">Our Products</h1>
+                <div class="filters">
+                    <input type="text" id="search-bar" class="search-bar" placeholder="Search for products...">
+                    <select id="sort-options" class="sort-options">
+                        <option value="default">Default Sorting</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                        <option value="name-desc">Name: Z to A</option>
+                    </select>
+                </div>
+                <div id="product-grid" class="product-grid">
+                    <!-- Products will be injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Wishlist Page -->
+        <section id="wishlist-page" data-page="wishlist" class="section">
+            <div class="container">
+                <h1 class="section-title">My Wishlist</h1>
+                <div id="wishlist-items-container"></div>
+                <div id="empty-wishlist-message" class="hidden">
+                    <p>Your wishlist is empty. Start adding some products!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart Page -->
+        <section id="cart-page" data-page="cart" class="section">
+            <div class="container">
+                <h1 class="section-title">Shopping Cart</h1>
+                <div id="cart-items-container"></div>
+                <div id="cart-summary" class="hidden">
+                    <h3>Total: <span id="cart-total-price">$0.00</span></h3>
+                    <button id="checkout-btn" class="btn">Proceed to Checkout</button>
+                </div>
+                <div id="empty-cart-message" class="hidden">
+                    <p>Your cart is empty. Let's go shopping!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Page -->
+        <section id="orders-page" data-page="orders" class="section">
+            <div class="container">
+                <h1 class="section-title">My Orders</h1>
+                <div id="orders-container">
+                     <!-- Orders table will be injected here -->
+                </div>
+                 <div id="no-orders-message" class="hidden">
+                    <p>You haven't placed any orders yet.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile-page" data-page="profile" class="section">
+            <div class="container">
+                <h1 class="section-title">My Profile</h1>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="profile-email" disabled>
+                </div>
+                 <div class="form-group">
+                    <label>Update Password</label>
+                    <input type="password" id="profile-password" placeholder="Enter new password">
+                </div>
+                <button id="update-profile-btn" class="btn">Update Password</button>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about-page" data-page="about" class="section">
+            <div class="container">
+                <h1 class="section-title">About Us</h1>
+                <p>We are a passionate team dedicated to bringing you the best products with the best service. Our mission is to make online shopping a seamless and enjoyable experience for everyone.</p>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact-page" data-page="contact" class="section">
+            <div class="container">
+                <h1 class="section-title">Contact Us</h1>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="contact-name">Name</label>
+                        <input type="text" id="contact-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-email">Email</label>
+                        <input type="email" id="contact-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-message">Message</label>
+                        <textarea id="contact-message" rows="5" style="width:100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 5px;" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <div class="auth-form-container">
+                <!-- Login Form -->
+                <form id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                    <p class="form-switch-text">Don't have an account? <span class="form-switch-link" data-form="register">Register here</span></p>
+                </form>
+                <!-- Register Form -->
+                <form id="register-form" class="auth-form hidden">
+                    <h2>Register</h2>
+                    <div class="form-group">
+                        <label for="register-email">Email</label>
+                        <input type="email" id="register-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Password</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <button type="submit" class="btn">Register</button>
+                    <p class="form-switch-text">Already have an account? <span class="form-switch-link" data-form="login">Login here</span></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <div id="product-detail-content">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-times modal-close"></i>
+            <h2>Confirm Order</h2>
+            <form id="checkout-form">
+                <p>Please confirm your details to place the order.</p>
+                <div class="form-group">
+                    <label for="checkout-name">Full Name</label>
+                    <input type="text" id="checkout-name" required>
+                </div>
+                 <div class="form-group">
+                    <label for="checkout-phone">Phone Number</label>
+                    <input type="tel" id="checkout-phone" required>
+                </div>
+                <button type="submit" class="btn">Place Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- All JavaScript is embedded here -->
+    <script type="module">
+        const firebaseConfig = {
+  apiKey: "AIzaSyDfMCNG_-H7KGGJUNPjYMnWJm8yKY2MVFI",
+  authDomain: "my-sister-f81fe.firebaseapp.com",
+  databaseURL: "https://my-sister-f81fe-default-rtdb.firebaseio.com",
+  projectId: "my-sister-f81fe",
+  storageBucket: "my-sister-f81fe.firebasestorage.app",
+  messagingSenderId: "578960836689",
+  appId: "1:578960836689:web:b58ebbf9af8c4387ced070",
+  measurementId: "G-Q9Y4HMLQE3"
+};
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged,
+            updatePassword
+        } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
+        import { 
+            getDatabase, 
+            ref, 
+            set, 
+            get, 
+            push, 
+            child,
+            onValue,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js";
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // --- STATE MANAGEMENT ---
+        let currentUser = null;
+        let allProducts = [];
+        let cart = [];
+        let wishlist = [];
+        const orderTimers = {}; // To store setInterval IDs for order countdowns
+
+        // --- DOM ELEMENT REFERENCES ---
+        const pages = document.querySelectorAll('main > section');
+        const productGrid = document.getElementById('product-grid');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const wishlistItemsContainer = document.getElementById('wishlist-items-container');
+        const cartCountBadge = document.getElementById('cart-count-badge');
+        const wishlistCountBadge = document.getElementById('wishlist-count-badge');
+        
+        // --- ROUTER ---
+        const handleRouteChange = () => {
+            const hash = window.location.hash || '#home';
+            const pageId = hash.substring(1) + '-page';
+            
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            });
+            // Lazy load data for pages
+            if (hash === '#orders' && currentUser) fetchUserOrders();
+        };
+
+        // --- AUTHENTICATION ---
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            updateUIForAuthState();
+            if (user) {
+                await mergeGuestDataToFirebase();
+                loadUserData();
+                document.getElementById('profile-email').value = user.email;
+            } else {
+                loadGuestData();
+            }
+        });
+
+        const updateUIForAuthState = () => {
+            const loggedInLinks = document.querySelectorAll('.logged-in-link');
+            const guestLinks = document.querySelectorAll('.guest-link');
+            if (currentUser) {
+                loggedInLinks.forEach(link => link.classList.remove('hidden'));
+                guestLinks.forEach(link => link.classList.add('hidden'));
+            } else {
+                loggedInLinks.forEach(link => link.classList.add('hidden'));
+                guestLinks.forEach(link => link.classList.remove('hidden'));
+            }
+        };
+
+        // --- DATA HANDLING (GUEST & USER) ---
+        const loadGuestData = () => {
+            cart = JSON.parse(localStorage.getItem('guestCart')) || [];
+            wishlist = JSON.parse(localStorage.getItem('guestWishlist')) || [];
+            updateCartAndWishlistUI();
+        };
+        
+        const saveGuestData = () => {
+            if (!currentUser) {
+                localStorage.setItem('guestCart', JSON.stringify(cart));
+                localStorage.setItem('guestWishlist', JSON.stringify(wishlist));
+            }
+        };
+
+        const loadUserData = () => {
+            if (!currentUser) return;
+            // Load cart
+            onValue(ref(db, `users/${currentUser.uid}/cart`), (snapshot) => {
+                cart = snapshot.exists() ? Object.values(snapshot.val()) : [];
+                updateCartAndWishlistUI();
+            });
+            // Load wishlist
+            onValue(ref(db, `users/${currentUser.uid}/wishlist`), (snapshot) => {
+                wishlist = snapshot.exists() ? Object.values(snapshot.val()) : [];
+                updateCartAndWishlistUI();
+            });
+        };
+
+        const mergeGuestDataToFirebase = async () => {
+            if (!currentUser) return;
+            const guestCart = JSON.parse(localStorage.getItem('guestCart')) || [];
+            const guestWishlist = JSON.parse(localStorage.getItem('guestWishlist')) || [];
+
+            if (guestCart.length > 0) {
+                const userCartRef = ref(db, `users/${currentUser.uid}/cart`);
+                const snapshot = await get(userCartRef);
+                const existingCart = snapshot.exists() ? snapshot.val() : {};
+                
+                guestCart.forEach(item => {
+                    if (!Object.values(existingCart).some(cartItem => cartItem.id === item.id)) {
+                        existingCart[item.id] = item;
+                    }
+                });
+                await set(userCartRef, existingCart);
+                showToast('Guest cart merged!', 'success');
+            }
+            
+            if (guestWishlist.length > 0) {
+                 const userWishlistRef = ref(db, `users/${currentUser.uid}/wishlist`);
+                const snapshot = await get(userWishlistRef);
+                const existingWishlist = snapshot.exists() ? snapshot.val() : {};
+                
+                guestWishlist.forEach(item => {
+                     if (!Object.values(existingWishlist).some(wishlistItem => wishlistItem.id === item.id)) {
+                        existingWishlist[item.id] = item;
+                    }
+                });
+                await set(userWishlistRef, existingWishlist);
+            }
+            
+            localStorage.removeItem('guestCart');
+            localStorage.removeItem('guestWishlist');
+        };
+
+        // --- PRODUCT HANDLING ---
+        const fetchProducts = () => {
+            const productsRef = ref(db, 'products');
+            onValue(productsRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const productsData = snapshot.val();
+                    allProducts = Object.keys(productsData).map(key => ({
+                        id: key,
+                        ...productsData[key]
+                    }));
+                    renderProducts(allProducts);
+                } else {
+                    productGrid.innerHTML = '<p>No products found.</p>';
+                }
+            });
+        };
+
+        const renderProducts = (productsToRender) => {
+            productGrid.innerHTML = '';
+            if (productsToRender.length === 0) {
+                productGrid.innerHTML = '<p>No products match your search.</p>';
+                return;
+            }
+            productsToRender.forEach(product => {
+                const isWished = wishlist.some(item => item.id === product.id);
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.imageUrl}" alt="${product.name}" class="product-image" data-id="${product.id}">
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-price">$${Number(product.price).toFixed(2)}</p>
+                        <div class="product-actions">
+                            <button class="btn btn-sm" data-action="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                            <button class="btn btn-wishlist ${isWished ? 'active' : ''}" data-action="toggle-wishlist" data-id="${product.id}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productGrid.appendChild(card);
+            });
+        };
+
+        // --- CART & WISHLIST LOGIC (CORRECTED) ---
+        const addToCart = (productId) => {
+            if (cart.some(item => item.id === productId)) {
+                showToast('Product is already in your cart.', 'info');
+                return;
+            }
+            const product = allProducts.find(p => p.id === productId);
+            if (product) {
+                const cartItem = { ...product, quantity: 1 };
+                
+                // 1. Optimistic UI update: Add to local array first
+                cart.push(cartItem);
+                
+                // 2. Persist change based on auth state
+                if (currentUser) {
+                    set(ref(db, `users/${currentUser.uid}/cart/${product.id}`), cartItem)
+                        .catch(err => showToast(`Sync failed: ${err.message}`, 'error'));
+                } else {
+                    saveGuestData();
+                }
+                
+                // 3. Update UI and show notification
+                updateCartAndWishlistUI();
+                showToast(`${product.name} added to cart!`, 'success');
+            }
+        };
+        
+        const removeFromCart = (productId) => {
+            const initialCartLength = cart.length;
+            
+            // 1. Optimistic UI update: Remove from local array first
+            cart = cart.filter(item => item.id !== productId);
+
+            // Check if an item was actually removed before proceeding
+            if (cart.length < initialCartLength) {
+                // 2. Persist change based on auth state
+                if (currentUser) {
+                    set(ref(db, `users/${currentUser.uid}/cart/${productId}`), null)
+                        .catch(err => showToast(`Sync failed: ${err.message}`, 'error'));
+                } else {
+                    saveGuestData();
+                }
+
+                // 3. Update UI and show notification
+                updateCartAndWishlistUI();
+                showToast('Item removed from cart.', 'info');
+            }
+        };
+
+        const toggleWishlist = (productId) => {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+            
+            const isWished = wishlist.some(item => item.id === productId);
+            
+            if (currentUser) {
+                const wishlistItemRef = ref(db, `users/${currentUser.uid}/wishlist/${productId}`);
+                if (isWished) {
+                    set(wishlistItemRef, null);
+                    showToast('Removed from wishlist.', 'info');
+                } else {
+                    set(wishlistItemRef, product);
+                    showToast('Added to wishlist!', 'success');
+                }
+            } else { // Guest user
+                if (isWished) {
+                    wishlist = wishlist.filter(item => item.id !== productId);
+                    showToast('Removed from wishlist.', 'info');
+                } else {
+                    wishlist.push(product);
+                    showToast('Added to wishlist!', 'success');
+                }
+                saveGuestData();
+                updateCartAndWishlistUI();
+            }
+        };
+
+        // --- UI RENDERING (CART, WISHLIST, ETC.) ---
+        const updateCartAndWishlistUI = () => {
+            // Update counts
+            cartCountBadge.textContent = cart.length;
+            wishlistCountBadge.textContent = wishlist.length;
+            cart.length > 0 ? cartCountBadge.classList.remove('hidden') : cartCountBadge.classList.add('hidden');
+            wishlist.length > 0 ? wishlistCountBadge.classList.remove('hidden') : wishlistCountBadge.classList.add('hidden');
+            
+            // Re-render product grid to update wishlist button states
+            if (document.getElementById('home-page').classList.contains('active')) {
+                const searchVal = document.getElementById('search-bar').value;
+                const sortVal = document.getElementById('sort-options').value;
+                handleFilterAndSort(searchVal, sortVal);
+            }
+
+            // Render Cart Page
+            renderCartPage();
+            // Render Wishlist Page
+            renderWishlistPage();
+        };
+
+        const renderCartPage = () => {
+            cartItemsContainer.innerHTML = '';
+            if (cart.length === 0) {
+                document.getElementById('empty-cart-message').classList.remove('hidden');
+                document.getElementById('cart-summary').classList.add('hidden');
+            } else {
+                document.getElementById('empty-cart-message').classList.add('hidden');
+                document.getElementById('cart-summary').classList.remove('hidden');
+                let totalPrice = 0;
+                cart.forEach(item => {
+                    totalPrice += Number(item.price) * item.quantity;
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'cart-item';
+                    itemEl.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.name}" class="cart-item-img">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>$${Number(item.price).toFixed(2)}</p>
+                        </div>
+                        <i class="fas fa-trash cart-item-remove" data-id="${item.id}"></i>
+                    `;
+                    cartItemsContainer.appendChild(itemEl);
+                });
+                document.getElementById('cart-total-price').textContent = `$${totalPrice.toFixed(2)}`;
+            }
+        };
+        
+        const renderWishlistPage = () => {
+            wishlistItemsContainer.innerHTML = '';
+             if (wishlist.length === 0) {
+                document.getElementById('empty-wishlist-message').classList.remove('hidden');
+            } else {
+                document.getElementById('empty-wishlist-message').classList.add('hidden');
+                 wishlist.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'wishlist-item';
+                    itemEl.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.name}" class="wishlist-item-img">
+                        <div class="wishlist-item-info">
+                            <h4>${item.name}</h4>
+                            <p>$${Number(item.price).toFixed(2)}</p>
+                        </div>
+                         <button class="btn btn-sm" data-action="add-to-cart" data-id="${item.id}">Add to Cart</button>
+                        <i class="fas fa-trash wishlist-item-remove" data-id="${item.id}"></i>
+                    `;
+                    wishlistItemsContainer.appendChild(itemEl);
+                });
+            }
+        };
+        
+        // --- ORDER HANDLING ---
+        const fetchUserOrders = () => {
+            if (!currentUser) return;
+            const ordersRef = ref(db, 'orders');
+            onValue(ordersRef, (snapshot) => {
+                const ordersContainer = document.getElementById('orders-container');
+                const noOrdersMessage = document.getElementById('no-orders-message');
+                ordersContainer.innerHTML = '';
+                if (!snapshot.exists()) {
+                    noOrdersMessage.classList.remove('hidden');
+                    return;
+                }
+                
+                const allOrders = snapshot.val();
+                const userOrders = Object.keys(allOrders)
+                    .map(key => ({ id: key, ...allOrders[key] }))
+                    .filter(order => order.userId === currentUser.uid)
+                    .sort((a, b) => b.createdAt - a.createdAt);
+
+                if (userOrders.length === 0) {
+                    noOrdersMessage.classList.remove('hidden');
+                    return;
+                }
+                
+                noOrdersMessage.classList.add('hidden');
+                
+                // Clear any existing timers
+                Object.values(orderTimers).forEach(clearInterval);
+
+                const table = document.createElement('table');
+                table.className = 'styled-table';
+                table.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Countdown</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                const tbody = table.querySelector('tbody');
+                userOrders.forEach(order => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>#${order.id.substring(0, 6)}...</td>
+                        <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                        <td>$${order.total.toFixed(2)}</td>
+                        <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
+                        <td id="timer-${order.id}">--</td>
+                    `;
+                    
+                    if (order.status === 'Confirmed' && order.confirmationTimestamp && order.timerDurationMinutes) {
+                        const timerCell = row.querySelector(`#timer-${order.id}`);
+                        startOrderCountdown(order, timerCell);
+                    }
+                });
+                ordersContainer.appendChild(table);
+            });
+        };
+        
+        const startOrderCountdown = (order, timerCell) => {
+            const endTime = order.confirmationTimestamp + (order.timerDurationMinutes * 60 * 1000);
+
+            const updateTimer = () => {
+                const now = Date.now();
+                const remaining = endTime - now;
+
+                if (remaining <= 0) {
+                    clearInterval(orderTimers[order.id]);
+                    timerCell.innerHTML = '✅ Ready!';
+                    // Optional: Update status in DB to 'Ready for Shipment'
+                    return;
+                }
+
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                timerCell.innerHTML = `⏳ ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            };
+            
+            updateTimer(); // Initial call
+            orderTimers[order.id] = setInterval(updateTimer, 1000);
+        };
+
+        // --- MODAL HANDLING ---
+        const showModal = (id) => document.getElementById(id).classList.add('active');
+        const hideModal = (id) => document.getElementById(id).classList.remove('active');
+
+        // --- TOAST NOTIFICATIONS ---
+        const showToast = (message, type = 'info') => {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        };
+        
+        // --- EVENT LISTENERS ---
+        const setupEventListeners = () => {
+            // Router
+            window.addEventListener('hashchange', handleRouteChange);
+            
+            // Auth links
+            document.getElementById('auth-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                showModal('auth-modal');
+            });
+            document.getElementById('logout-link').addEventListener('click', (e) => {
+                e.preventDefault();
+                signOut(auth).catch(err => showToast(`Logout failed: ${err.message}`, 'error'));
+            });
+
+            // Auth modal forms
+            document.getElementById('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const pass = document.getElementById('login-password').value;
+                signInWithEmailAndPassword(auth, email, pass)
+                    .then(() => {
+                        hideModal('auth-modal');
+                        showToast('Logged in successfully!', 'success');
+                    })
+                    .catch(err => showToast(`Error: ${err.message}`, 'error'));
+            });
+             document.getElementById('register-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('register-email').value;
+                const pass = document.getElementById('register-password').value;
+                createUserWithEmailAndPassword(auth, email, pass)
+                    .then((userCredential) => {
+                        // Create user profile in DB
+                        set(ref(db, `users/${userCredential.user.uid}`), {
+                            email: userCredential.user.email,
+                            createdAt: serverTimestamp()
+                        });
+                        hideModal('auth-modal');
+                        showToast('Registered successfully!', 'success');
+                    })
+                    .catch(err => showToast(`Error: ${err.message}`, 'error'));
+            });
+
+            // Auth form switcher
+            document.querySelectorAll('.form-switch-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const targetForm = e.target.dataset.form;
+                    const loginForm = document.getElementById('login-form');
+                    const registerForm = document.getElementById('register-form');
+                    if (targetForm === 'register') {
+                        loginForm.classList.add('hidden');
+                        registerForm.classList.remove('hidden');
+                    } else {
+                        loginForm.classList.remove('hidden');
+                        registerForm.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Close modals
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    hideModal(e.target.closest('.modal').id);
+                });
+            });
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) hideModal(modal.id);
+                });
+            });
+
+            // Product interactions
+            productGrid.addEventListener('click', e => {
+                const target = e.target;
+                const action = target.dataset.action || target.parentElement.dataset.action;
+                const id = target.dataset.id || target.parentElement.dataset.id;
+                
+                if (action === 'add-to-cart') {
+                    addToCart(id);
+                } else if (action === 'toggle-wishlist') {
+                    toggleWishlist(id);
+                } else if (target.classList.contains('product-image')) {
+                    const product = allProducts.find(p => p.id === target.dataset.id);
+                    if(product) {
+                        document.getElementById('product-detail-content').innerHTML = `
+                            <div class="product-detail-layout">
+                                <div class="product-detail-image">
+                                    <img src="${product.imageUrl}" alt="${product.name}">
+                                </div>
+                                <div class="product-detail-info">
+                                    <h2>${product.name}</h2>
+                                    <p style="font-size: 1.5rem; color: var(--primary-color); font-weight: bold; margin: 1rem 0;">$${Number(product.price).toFixed(2)}</p>
+                                    <p>${product.description}</p>
+                                    <br>
+                                    <button class="btn" data-action="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                                </div>
+                            </div>
+                        `;
+                        showModal('product-detail-modal');
+                    }
+                }
+            });
+
+            // Cart/Wishlist page interactions
+            cartItemsContainer.addEventListener('click', e => {
+                if (e.target.classList.contains('cart-item-remove')) {
+                    removeFromCart(e.target.dataset.id);
+                }
+            });
+            wishlistItemsContainer.addEventListener('click', e => {
+                 if (e.target.classList.contains('wishlist-item-remove')) {
+                    toggleWishlist(e.target.dataset.id);
+                } else if(e.target.dataset.action === 'add-to-cart') {
+                    addToCart(e.target.dataset.id);
+                }
+            });
+            
+             // Product detail modal add to cart
+            document.getElementById('product-detail-modal').addEventListener('click', e => {
+                const target = e.target;
+                if(target.dataset.action === 'add-to-cart'){
+                    addToCart(target.dataset.id);
+                    hideModal('product-detail-modal');
+                }
+            });
+            
+            // Search and sort
+            const handleFilterAndSort = (searchTerm, sortOption) => {
+                let filtered = allProducts.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+                
+                switch (sortOption) {
+                    case 'price-asc': filtered.sort((a,b) => a.price - b.price); break;
+                    case 'price-desc': filtered.sort((a,b) => b.price - a.price); break;
+                    case 'name-asc': filtered.sort((a,b) => a.name.localeCompare(b.name)); break;
+                    case 'name-desc': filtered.sort((a,b) => b.name.localeCompare(a.name)); break;
+                }
+                renderProducts(filtered);
+            };
+            
+            document.getElementById('search-bar').addEventListener('input', (e) => {
+                handleFilterAndSort(e.target.value, document.getElementById('sort-options').value);
+            });
+            document.getElementById('sort-options').addEventListener('change', (e) => {
+                handleFilterAndSort(document.getElementById('search-bar').value, e.target.value);
+            });
+            
+            // Checkout
+            document.getElementById('checkout-btn').addEventListener('click', () => {
+                if (!currentUser) {
+                    showToast('Please log in to proceed to checkout.', 'info');
+                    showModal('auth-modal');
+                    return;
+                }
+                if (cart.length === 0) {
+                    showToast('Your cart is empty.', 'error');
+                    return;
+                }
+                showModal('checkout-modal');
+            });
+            
+            document.getElementById('checkout-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('checkout-name').value;
+                const phone = document.getElementById('checkout-phone').value;
+                
+                const total = cart.reduce((sum, item) => sum + (Number(item.price) * item.quantity), 0);
+                
+                const orderData = {
+                    userId: currentUser.uid,
+                    userEmail: currentUser.email,
+                    userName: name,
+                    userPhone: phone,
+                    items: cart,
+                    total: total,
+                    status: 'Pending',
+                    createdAt: serverTimestamp()
+                };
+                
+                const newOrderKey = push(child(ref(db), 'orders')).key;
+                set(ref(db, 'orders/' + newOrderKey), orderData)
+                    .then(() => {
+                        // Clear cart
+                        set(ref(db, `users/${currentUser.uid}/cart`), null);
+                        hideModal('checkout-modal');
+                        showToast('Order placed successfully!', 'success');
+                        window.location.hash = '#orders';
+                    })
+                    .catch(err => showToast(`Order failed: ${err.message}`, 'error'));
+            });
+            
+            // Profile Update
+            document.getElementById('update-profile-btn').addEventListener('click', () => {
+                const newPassword = document.getElementById('profile-password').value;
+                if (newPassword.length < 6) {
+                    showToast('Password must be at least 6 characters long.', 'error');
+                    return;
+                }
+                updatePassword(currentUser, newPassword)
+                    .then(() => {
+                        showToast('Password updated successfully!', 'success');
+                        document.getElementById('profile-password').value = '';
+                    })
+                    .catch(err => showToast(`Error: ${err.message}`, 'error'));
+            });
+            
+            // Contact Form
+            document.getElementById('contact-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const message = document.getElementById('contact-message').value;
+                
+                const messageData = {
+                    name, email, message, sentAt: serverTimestamp()
+                };
+                
+                push(ref(db, 'messages'), messageData)
+                    .then(() => {
+                        showToast('Message sent! We will get back to you soon.', 'success');
+                        e.target.reset();
+                    })
+                    .catch(err => showToast(`Error: ${err.message}`, 'error'));
+            });
+        };
+
+        // --- INITIALIZATION ---
+        const init = () => {
+            handleRouteChange();
+            fetchProducts();
+            setupEventListeners();
+        };
+
+        init();
+    </script>
+</body>
+</html>
