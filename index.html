@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ✅ PWA Manifest & Theme -->
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#007bff" />
+<link rel="apple-touch-icon" href="icons/icon-192.png">
     <title>E-Commerce Store</title>
     
     <!-- Google Fonts: Poppins -->
@@ -1397,5 +1401,12 @@
 
         init();
     </script>
+
+    <!-- ✅ Install Popup UI -->
+<div id="installPopup" style="display:none; position:fixed; bottom:20px; left:20px; right:20px; background:#007bff; color:white; padding:15px; border-radius:10px; text-align:center; z-index:999;">
+  <p>Install this app on your device?</p>
+  <button id="installBtn" style="padding:10px 20px; background:white; color:#007bff; border:none; border-radius:5px;">Install</button>
+</div>
+    
 </body>
 </html>
