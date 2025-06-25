@@ -1,6 +1,6 @@
 self.addEventListener('install', (event) => {
   console.log('✅ Service Worker: Installed');
-  self.skipWaiting(); // ইচ্ছা করলে বাদ দিতে পারো
+  self.skipWaiting(); // এটি নতুন সার্ভিস ওয়ার্কারকে দ্রুত সক্রিয় করে
 });
 
 self.addEventListener('activate', (event) => {
@@ -8,5 +8,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Optional: Future offline caching etc.
+  // ভবিষ্যতের জন্য ক্যাশিং লজিক এখানে যুক্ত করা যেতে পারে,
+  // যা অ্যাপটিকে অফলাইনেও কাজ করতে সাহায্য করবে।
 });
